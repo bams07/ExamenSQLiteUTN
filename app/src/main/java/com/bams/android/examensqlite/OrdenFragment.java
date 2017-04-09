@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bams.android.examensqlite.Adapter.OrdenesListAdapter;
+import com.bams.android.examensqlite.Adapter.PlatosListAdapter;
 import com.bams.android.examensqlite.Entities.Orden;
 import com.bams.android.examensqlite.Entities.Plato;
 
@@ -34,12 +36,11 @@ public class OrdenFragment extends Fragment {
     @BindView(R.id.txtSelectedPlato) EditText txtSelectedPlato;
 
     Dialog matchTextDialog;
-    ListView textListView;
+    ListView listViewOrdenes;
+    ListView listViewPlatos;
     int selectedPlato = 0;
     ArrayList<Plato> listPlatos;
     ArrayList<Orden> listOrdenes;
-    ArrayList<String> listPlatosName;
-    ArrayList<String> listOrdenesName;
 
 
     public OrdenFragment() {
@@ -91,25 +92,17 @@ public class OrdenFragment extends Fragment {
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("AGREGAR PLATOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewPlatos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listPlatos = plato.leer(this.getContext());
-        listPlatosName = new ArrayList<String>();
-
-        for (Plato data : listPlatos) {
-            listPlatosName.add("Nombre: " + data.getNombre() + " Precio: " + data.getPrecio() +
-                    "Descripcion: " + data.getDescripcion());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listPlatosName);
-        textListView.setAdapter(adapter);
+        PlatosListAdapter adapter = new PlatosListAdapter(this.getContext(), listPlatos);
+        listViewPlatos.setAdapter(adapter);
 
 
-        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewPlatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int plato_id = listPlatos.get(position).getId();
@@ -141,7 +134,8 @@ public class OrdenFragment extends Fragment {
             }
 
             if (selectedPlato == 0) {
-                Toast.makeText(this.getContext(), "ES NECESARIO AGREGAR UN PLATO", Toast.LENGTH_LONG)
+                Toast.makeText(this.getContext(), "ES NECESARIO AGREGAR UN PLATO",
+                        Toast.LENGTH_LONG)
                         .show();
                 return;
             }
@@ -169,27 +163,18 @@ public class OrdenFragment extends Fragment {
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("ELIMINAR ORDENES");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewOrdenes = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listOrdenes = orden.leer(this.getContext());
-        listOrdenesName = new ArrayList<String>();
 
-        for (Orden data : listOrdenes) {
-            listOrdenesName
-                    .add("ID: " + data.getId() + " Fecha: " + data.getFecha() +
-                            " Hora: " + data.getHora() + " Comentario: " + data.getComentario() +
-                            " Localizacion: " + data.getLocalizacion());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listOrdenesName);
-        textListView.setAdapter(adapter);
+        OrdenesListAdapter adapter = new OrdenesListAdapter(this.getContext(), listOrdenes);
+        listViewOrdenes.setAdapter(adapter);
 
 
-        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewOrdenes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int orden_id = listOrdenes.get(position).getId();
@@ -207,25 +192,15 @@ public class OrdenFragment extends Fragment {
         Orden orden = new Orden();
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
-        matchTextDialog.setTitle("ELIMINAR ORDENES");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        matchTextDialog.setTitle("ORDENES");
+        listViewOrdenes = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listOrdenes = orden.leer(this.getContext());
-        listOrdenesName = new ArrayList<String>();
-
-        for (Orden data : listOrdenes) {
-            listOrdenesName
-                    .add("ID: " + data.getId() + " Fecha: " + data.getFecha() +
-                            " Hora: " + data.getHora() + " Comentario: " + data.getComentario() +
-                            " Localizacion: " + data.getLocalizacion());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listOrdenesName);
-        textListView.setAdapter(adapter);
+        OrdenesListAdapter adapter = new OrdenesListAdapter(this.getContext(), listOrdenes);
+        listViewOrdenes.setAdapter(adapter);
 
 
         matchTextDialog.show();

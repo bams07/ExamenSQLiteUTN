@@ -111,12 +111,11 @@ public class Plato extends Entities {
         Plato plato;
 
         String sqlQuery = String.format(
-                "SELECT DISTINCT p.*, i.nombre insumo_nombre, " +
+                "SELECT p.*, i.nombre insumo_nombre, " +
                         "i.cantidad insumo_cantidad, i.unidad_medida insumo_unidad_medida " +
                         "FROM %s p " +
                         "INNER JOIN %s ip ON p.id=ip.plato_id " +
-                        "INNER JOIN %s i ON ip.insumo_id=i.id" +
-                        " ORDER BY ip.id",
+                        "INNER JOIN %s i ON ip.insumo_id=i.id",
                 DataBaseContract.DataBaseEntry.TABLE_NAME_PLATO,
                 DataBaseContract.DataBaseEntry.TABLE_NAME_INSUMO_PLATO,
                 DataBaseContract.DataBaseEntry.TABLE_NAME_INSUMO);

@@ -132,11 +132,10 @@ public class Orden extends Entities {
         ArrayList<Orden> listOrdenes = new ArrayList<Orden>();
 
         String sqlQuery = String.format(
-                "SELECT DISTINCT o.*, p.nombre plato_nombre, " +
+                "SELECT o.*, p.nombre plato_nombre, " +
                         "p.precio plato_precio, p.descripcion plato_descripcion " +
                         "FROM %s o " +
-                        "INNER JOIN %s p ON o.plato_id=p.id " +
-                        " GROUP BY o.id",
+                        "INNER JOIN %s p ON o.plato_id=p.id ",
                 DataBaseContract.DataBaseEntry.TABLE_NAME_ORDEN,
                 DataBaseContract.DataBaseEntry.TABLE_NAME_PLATO);
 

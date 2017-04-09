@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:columnCount="1"
+        android:orientation="horizontal"
+        android:rowCount="3"
+        tools:context=".GridXMLActivity">
+
+        <RelativeLayout
+            android:layout_column="0"
+            android:layout_gravity="start"
+            android:layout_row="0">
+
+            <TextView
+                android:id="@+id/txtOrdenPlatoNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ARROZ CON CAMARONES"
+                android:textAllCaps="true"
+                android:textColor="#d70606"
+                android:textSize="15sp"
+                android:textStyle="normal|bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_column="0"
+            android:layout_gravity="end|center_vertical"
+            android:layout_row="1">
+
+            <TextView
+                android:id="@+id/txtOrdenLocalizacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:text="Mesa #4"
+                android:textColor="#017ef4"
+                android:textSize="20sp"
+                android:textStyle="normal|bold" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtOrdenFechaHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_gravity="center_vertical"
+            android:layout_row="1"
+            android:text="20/05/2017 12:05"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:textStyle="normal|bold" />
+
+        <RelativeLayout
+            android:layout_column="0"
+            android:layout_row="2">
+
+            <TextView
+                android:id="@+id/txtOrdenComentario"
+                android:text="Comentario del platillo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </GridLayout>
+
+</LinearLayout>

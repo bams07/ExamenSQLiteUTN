@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bams.android.examensqlite.Adapter.InsumosListAdapter;
+import com.bams.android.examensqlite.Adapter.PlatosListAdapter;
 import com.bams.android.examensqlite.Entities.Insumo;
 import com.bams.android.examensqlite.Entities.InsumoPlato;
 import com.bams.android.examensqlite.Entities.Plato;
@@ -34,15 +36,12 @@ public class PlatosFragment extends Fragment {
     @BindView(R.id.btnAgregarInsumos) Button btnAgregarInsumos;
     @BindView(R.id.txtInsumosList) EditText txtInsumosList;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
     Dialog matchTextDialog;
-    ListView textListView;
+    ListView listViewPlatos;
+    ListView listViewInsumos;
     ArrayList<Plato> listPlatos;
-    ArrayList<String> listPlatosName;
     ArrayList<Insumo> listInsumos;
-    ArrayList<String> listInsumosName;
     ArrayList<Integer> selectedInsumos = new ArrayList<Integer>();
 
 
@@ -50,7 +49,6 @@ public class PlatosFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static PlatosFragment newInstance(String param1, String param2) {
         PlatosFragment fragment = new PlatosFragment();
         Bundle args = new Bundle();
@@ -95,26 +93,18 @@ public class PlatosFragment extends Fragment {
         final Insumo insumo = new Insumo();
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
-        matchTextDialog.setTitle("AGREGAR INSUMOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        matchTextDialog.setTitle("INSUMOS");
+        listViewInsumos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listInsumos = insumo.leer(this.getContext());
-        listInsumosName = new ArrayList<String>();
-
-        for (Insumo data : listInsumos) {
-            listInsumosName.add("Nombre: " + data.getNombre() + " Cantidad: " + data.getCantidad() +
-                    " Unidad de medida: " + data.getUnidadMedida());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listInsumosName);
-        textListView.setAdapter(adapter);
+        InsumosListAdapter adapter = new InsumosListAdapter(this.getContext(), listInsumos);
+        listViewInsumos.setAdapter(adapter);
 
 
-        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewInsumos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int insumo_id = listInsumos.get(position).getId();
@@ -175,26 +165,18 @@ public class PlatosFragment extends Fragment {
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("ELIMINAR PLATOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewPlatos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listPlatos = plato.leer(this.getContext());
-        listPlatosName = new ArrayList<String>();
-
-        for (Plato data : listPlatos) {
-            listPlatosName
-                    .add("Nombre: " + data.getNombre() + "/n Descripcion: " + data.getDescripcion() +
-                            " Precio: " + data.getPrecio());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listPlatosName);
-        textListView.setAdapter(adapter);
+        PlatosListAdapter adapter = new PlatosListAdapter(this.getContext(), listPlatos);
+        listViewPlatos.setAdapter(adapter);
 
 
-        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        listViewPlatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int plato_id = listPlatos.get(position).getId();
@@ -213,23 +195,15 @@ public class PlatosFragment extends Fragment {
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("PLATOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewPlatos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listPlatos = plato.leer(this.getContext());
-        listPlatosName = new ArrayList<String>();
-
-        for (Plato data : listPlatos) {
-            listPlatosName
-                    .add("Nombre: " + data.getNombre() + " Descripcion: " + data.getDescripcion() +
-                            " Precio: " + data.getPrecio());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listPlatosName);
-        textListView.setAdapter(adapter);
+        PlatosListAdapter adapter = new PlatosListAdapter(this.getContext(), listPlatos);
+        listViewPlatos.setAdapter(adapter);
+
 
         matchTextDialog.show();
     }

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bams.android.examensqlite.Adapter.InsumosListAdapter;
 import com.bams.android.examensqlite.Entities.Insumo;
 
 import java.util.ArrayList;
@@ -28,8 +29,6 @@ import butterknife.OnClick;
 public class InsumosFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     @BindView(R.id.txtNombre) EditText txtNombre;
     @BindView(R.id.txtCantidad) EditText txtCantidad;
     @BindView(R.id.txtUnidadMedida) EditText txtUnidadMedida;
@@ -39,28 +38,17 @@ public class InsumosFragment extends Fragment {
 
 
     Dialog matchTextDialog;
-    ListView textListView;
+    ListView listViewInsumos;
     ArrayList<Insumo> listInsumos;
-    ArrayList<String> listInsumosName;
 
     public InsumosFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of this fragment using the provided
-     * parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InsumosFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static InsumosFragment newInstance(String param1, String param2) {
         InsumosFragment fragment = new InsumosFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -134,25 +122,16 @@ public class InsumosFragment extends Fragment {
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("ELIMINAR INSUMOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewInsumos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listInsumos = insumo.leer(this.getContext());
-        listInsumosName = new ArrayList<String>();
-
-        for (Insumo data : listInsumos) {
-            listInsumosName.add("Nombre: " + data.getNombre() + " Cantidad: " + data.getCantidad() +
-                    " Unidad de medida: " + data.getUnidadMedida());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listInsumosName);
-        textListView.setAdapter(adapter);
+        InsumosListAdapter adapter = new InsumosListAdapter(this.getContext(), listInsumos);
+        listViewInsumos.setAdapter(adapter);
 
-
-        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewInsumos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int insumo_id = listInsumos.get(position).getId();
@@ -167,27 +146,19 @@ public class InsumosFragment extends Fragment {
     }
 
     private void verLista() {
-        Insumo insumo = new Insumo();
+        final Insumo insumo = new Insumo();
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
         matchTextDialog.setTitle("INSUMOS");
-        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listViewInsumos = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listInsumos = insumo.leer(this.getContext());
-        listInsumosName = new ArrayList<String>();
 
-        for (Insumo data : listInsumos) {
-            listInsumosName.add("Nombre: " + data.getNombre() + " Cantidad: " + data.getCantidad() +
-                    " Unidad de medida: " + data.getUnidadMedida());
-        }
 
         /**
          * Set adapter to listView
          */
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
-                        listInsumosName);
-        textListView.setAdapter(adapter);
-
+        InsumosListAdapter adapter = new InsumosListAdapter(this.getContext(), listInsumos);
+        listViewInsumos.setAdapter(adapter);
 
         matchTextDialog.show();
     }
