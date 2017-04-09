@@ -95,7 +95,7 @@ public class PlatosFragment extends Fragment {
         final Insumo insumo = new Insumo();
         matchTextDialog = new Dialog(this.getContext());
         matchTextDialog.setContentView(R.layout.dialog_matches_frag);
-        matchTextDialog.setTitle("ELIMINAR INSUMOS");
+        matchTextDialog.setTitle("AGREGAR INSUMOS");
         textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
         listInsumos = insumo.leer(this.getContext());
         listInsumosName = new ArrayList<String>();
@@ -181,7 +181,7 @@ public class PlatosFragment extends Fragment {
 
         for (Plato data : listPlatos) {
             listPlatosName
-                    .add("Nombre: " + data.getNombre() + " Descripcion: " + data.getDescripcion() +
+                    .add("Nombre: " + data.getNombre() + "/n Descripcion: " + data.getDescripcion() +
                             " Precio: " + data.getPrecio());
         }
 

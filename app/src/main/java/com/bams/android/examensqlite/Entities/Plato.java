@@ -107,13 +107,16 @@ public class Plato extends Entities {
     public ArrayList<Plato> leer(Context context) {
         ArrayList<Plato> listPlatos = new ArrayList<Plato>();
         insumos = new ArrayList<Insumo>();
+        int position;
+        Plato plato;
 
         String sqlQuery = String.format(
                 "SELECT DISTINCT p.*, i.nombre insumo_nombre, " +
                         "i.cantidad insumo_cantidad, i.unidad_medida insumo_unidad_medida " +
                         "FROM %s p " +
                         "INNER JOIN %s ip ON p.id=ip.plato_id " +
-                        "INNER JOIN %s i ON ip.insumo_id=i.id",
+                        "INNER JOIN %s i ON ip.insumo_id=i.id" +
+                        " ORDER BY ip.id",
                 DataBaseContract.DataBaseEntry.TABLE_NAME_PLATO,
                 DataBaseContract.DataBaseEntry.TABLE_NAME_INSUMO_PLATO,
                 DataBaseContract.DataBaseEntry.TABLE_NAME_INSUMO);
@@ -124,7 +127,8 @@ public class Plato extends Entities {
 
         if (cursor.moveToFirst()) {
             do {
-                Plato plato = new Plato();
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(
+                        DataBaseContract.DataBaseEntry.COLUMN_NAME_ID));
                 String insumoNombre = cursor.getString(cursor.getColumnIndexOrThrow(
                         "insumo_nombre"));
                 Double insumoCantidad = cursor.getDouble(cursor.getColumnIndexOrThrow(
@@ -132,27 +136,43 @@ public class Plato extends Entities {
                 String insumoUnidadMedida = cursor.getString(cursor.getColumnIndexOrThrow(
                         "insumo_unidad_medida"));
 
-                // ID
-                plato.setId(cursor.getInt(cursor.getColumnIndexOrThrow(
-                        DataBaseContract.DataBaseEntry.COLUMN_NAME_ID)));
+                if (id != getId()) {
 
-                // NOMBRE
-                plato.setNombre(cursor.getString(cursor.getColumnIndexOrThrow(
-                        DataBaseContract.DataBaseEntry.COLUMN_NAME_NOMBRE_PLATO)));
+                    plato = new Plato();
 
-                // PRECIO
-                plato.setPrecio(cursor.getDouble(cursor.getColumnIndexOrThrow(
-                        DataBaseContract.DataBaseEntry.COLUMN_NAME_PRECIO_PLATO)));
+                    if (id != getId()) {
+                        insumos = new ArrayList<Insumo>();
+                    }
 
-                // DESCRIPCION
-                plato.setDescripcion(cursor.getString(cursor.getColumnIndexOrThrow(
-                        DataBaseContract.DataBaseEntry.COLUMN_NAME_DESCRIPCION_PLATO)));
+                    // ID
+                    plato.setId(id);
 
-                insumos.add(new Insumo(insumoNombre, insumoCantidad, insumoUnidadMedida));
+                    setId(id);
 
-                plato.setInsumos(insumos);
-                // Adding plato to list
-                listPlatos.add(plato);
+                    // NOMBRE
+                    plato.setNombre(cursor.getString(cursor.getColumnIndexOrThrow(
+                            DataBaseContract.DataBaseEntry.COLUMN_NAME_NOMBRE_PLATO)));
+
+                    // PRECIO
+                    plato.setPrecio(cursor.getDouble(cursor.getColumnIndexOrThrow(
+                            DataBaseContract.DataBaseEntry.COLUMN_NAME_PRECIO_PLATO)));
+
+                    // DESCRIPCION
+                    plato.setDescripcion(cursor.getString(cursor.getColumnIndexOrThrow(
+                            DataBaseContract.DataBaseEntry.COLUMN_NAME_DESCRIPCION_PLATO)));
+
+                    insumos.add(new Insumo(insumoNombre, insumoCantidad, insumoUnidadMedida));
+
+                    plato.setInsumos(insumos);
+
+
+                    // Adding plato to list
+                    listPlatos.add(plato);
+                }else if (id == getId()){
+                    insumos.add(new Insumo(insumoNombre, insumoCantidad, insumoUnidadMedida));
+                    listPlatos.get(listPlatos.size() -1).setInsumos(insumos);
+
+                }
             } while (cursor.moveToNext());
         }
 

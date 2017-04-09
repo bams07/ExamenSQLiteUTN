@@ -1,48 +1,54 @@
 package com.bams.android.examensqlite;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.bams.android.examensqlite.Entities.Orden;
+import com.bams.android.examensqlite.Entities.Plato;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class OrdenFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    @BindView(R.id.txtFecha) EditText txtFecha;
+    @BindView(R.id.txtHora) EditText txtHora;
+    @BindView(R.id.txtComentario) EditText txtComentario;
+    @BindView(R.id.txtLocalizacion) EditText txtLocalizacion;
+    @BindView(R.id.btnInsertar) Button btnInsertar;
+    @BindView(R.id.btnVerLista) Button btnVerLista;
+    @BindView(R.id.btnEliminarLista) Button btnEliminarLista;
+    @BindView(R.id.btnAgregarPlatos) Button btnAgregarPlatos;
+    @BindView(R.id.txtSelectedPlato) EditText txtSelectedPlato;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Dialog matchTextDialog;
+    ListView textListView;
+    int selectedPlato = 0;
+    ArrayList<Plato> listPlatos;
+    ArrayList<Orden> listOrdenes;
+    ArrayList<String> listPlatosName;
+    ArrayList<String> listOrdenesName;
 
-//    private OnFragmentInteractionListener mListener;
 
     public OrdenFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of this fragment using the provided
-     * parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrdenFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static OrdenFragment newInstance(String param1, String param2) {
         OrdenFragment fragment = new OrdenFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,10 +56,6 @@ public class OrdenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -66,41 +68,178 @@ public class OrdenFragment extends Fragment {
         return view;
     }
 
+    @OnClick({R.id.btnInsertar, R.id.btnVerLista, R.id.btnEliminarLista, R.id.btnAgregarPlatos})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnInsertar:
+                insertarOrden();
+                break;
+            case R.id.btnVerLista:
+                verLista();
+                break;
+            case R.id.btnEliminarLista:
+                eliminarLista();
+                break;
+            case R.id.btnAgregarPlatos:
+                agregarPlatos();
+                break;
+        }
+    }
 
-//
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
+    private void agregarPlatos() {
+        final Plato plato = new Plato();
+        matchTextDialog = new Dialog(this.getContext());
+        matchTextDialog.setContentView(R.layout.dialog_matches_frag);
+        matchTextDialog.setTitle("AGREGAR PLATOS");
+        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listPlatos = plato.leer(this.getContext());
+        listPlatosName = new ArrayList<String>();
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+        for (Plato data : listPlatos) {
+            listPlatosName.add("Nombre: " + data.getNombre() + " Precio: " + data.getPrecio() +
+                    "Descripcion: " + data.getDescripcion());
+        }
 
-//    /**
-//     * This interface must be implemented by activities that contain this fragment to allow an
-//     * interaction in this fragment to be communicated to the activity and potentially other
-//     * fragments contained in that activity. <p> See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html" >Communicating
-//     * with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+        /**
+         * Set adapter to listView
+         */
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
+                        listPlatosName);
+        textListView.setAdapter(adapter);
+
+
+        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int plato_id = listPlatos.get(position).getId();
+                String nombre = listPlatos.get(position).getNombre();
+                selectedPlato = plato_id;
+                txtSelectedPlato.setText(nombre);
+                matchTextDialog.hide();
+
+            }
+        });
+        matchTextDialog.show();
+    }
+
+
+    private void insertarOrden() {
+        try {
+
+            String fecha = txtFecha.getText().toString();
+            String hora = txtHora.getText().toString();
+            String comentario = txtComentario.getText().toString();
+            String localizacion = txtLocalizacion.getText().toString();
+            int plato_id = selectedPlato;
+
+            if (fecha.isEmpty() || hora.isEmpty() || comentario.isEmpty() ||
+                    localizacion.isEmpty()) {
+                Toast.makeText(this.getContext(), "CAMPOS OBLIGATORIOS", Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
+            if (selectedPlato == 0) {
+                Toast.makeText(this.getContext(), "ES NECESARIO AGREGAR UN PLATO", Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+
+            Orden orden = new Orden(plato_id, fecha, hora, comentario, localizacion);
+
+            long orden_id = orden.insertar(this.getContext());
+
+
+            Toast.makeText(this.getContext(),
+                    "NUEVA ORDEN AGREGADA: " + orden_id, Toast.LENGTH_LONG)
+                    .show();
+
+            limpiar();
+
+        } catch (Exception e) {
+            Toast.makeText(this.getContext(), e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    private void eliminarLista() {
+        final Orden orden = new Orden();
+        matchTextDialog = new Dialog(this.getContext());
+        matchTextDialog.setContentView(R.layout.dialog_matches_frag);
+        matchTextDialog.setTitle("ELIMINAR ORDENES");
+        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listOrdenes = orden.leer(this.getContext());
+        listOrdenesName = new ArrayList<String>();
+
+        for (Orden data : listOrdenes) {
+            listOrdenesName
+                    .add("ID: " + data.getId() + " Fecha: " + data.getFecha() +
+                            " Hora: " + data.getHora() + " Comentario: " + data.getComentario() +
+                            " Localizacion: " + data.getLocalizacion());
+        }
+
+        /**
+         * Set adapter to listView
+         */
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
+                        listOrdenesName);
+        textListView.setAdapter(adapter);
+
+
+        textListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int orden_id = listOrdenes.get(position).getId();
+                orden.eliminar(parent.getContext(), orden_id);
+                matchTextDialog.hide();
+                Toast.makeText(parent.getContext(), "ELIMINADA ORDEN: " + orden_id,
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+        matchTextDialog.show();
+    }
+
+    private void verLista() {
+        Orden orden = new Orden();
+        matchTextDialog = new Dialog(this.getContext());
+        matchTextDialog.setContentView(R.layout.dialog_matches_frag);
+        matchTextDialog.setTitle("ELIMINAR ORDENES");
+        textListView = (ListView) matchTextDialog.findViewById(R.id.listView1);
+        listOrdenes = orden.leer(this.getContext());
+        listOrdenesName = new ArrayList<String>();
+
+        for (Orden data : listOrdenes) {
+            listOrdenesName
+                    .add("ID: " + data.getId() + " Fecha: " + data.getFecha() +
+                            " Hora: " + data.getHora() + " Comentario: " + data.getComentario() +
+                            " Localizacion: " + data.getLocalizacion());
+        }
+
+        /**
+         * Set adapter to listView
+         */
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1,
+                        listOrdenesName);
+        textListView.setAdapter(adapter);
+
+
+        matchTextDialog.show();
+    }
+
+
+    private void limpiar() {
+
+        txtLocalizacion.setText("");
+        txtComentario.setText("");
+        txtHora.setText("");
+        txtFecha.setText("");
+        txtSelectedPlato.setText("");
+        selectedPlato = 0;
+
+    }
 }

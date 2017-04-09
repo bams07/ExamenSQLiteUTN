@@ -19,6 +19,7 @@ public class RestaurantActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public FragmentManager fragmentManager = getSupportFragmentManager();
+    public Toolbar toolbar;
 
 
     @Override
@@ -26,17 +27,9 @@ public class RestaurantActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_restaurant);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("INSUMOS");
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,6 +40,10 @@ public class RestaurantActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_restaurant, new InsumosFragment(), "INSUMOS_FRAGMENT")
+                .commit();
     }
 
     @Override
@@ -89,16 +86,19 @@ public class RestaurantActivity extends AppCompatActivity
 
         // Handle my list menu action
         if (id == R.id.nav_ordenes) {
+            toolbar.setTitle("ORDENES");
             fragmentManager.beginTransaction()
                     .replace(R.id.content_restaurant, new OrdenFragment(), "ORDEN_FRAGMENT")
                     .commit();
 
             // Handle the reports menu action
         } else if (id == R.id.nav_insumos) {
+            toolbar.setTitle("INSUMOS");
             fragmentManager.beginTransaction()
                     .replace(R.id.content_restaurant, new InsumosFragment(), "INSUMOS_FRAGMENT")
                     .commit();
         } else if (id == R.id.nav_platos) {
+            toolbar.setTitle("PLATOS");
             fragmentManager.beginTransaction()
                     .replace(R.id.content_restaurant, new PlatosFragment(), "PLATOS_FRAGMENT")
                     .commit();
