@@ -1,0 +1,69 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bams.android.examensqlite.InsumosFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOMBRE:" />
+
+        <EditText
+            android:id="@+id/txtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="NOMBRE" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANTIDAD:" />
+
+        <EditText
+            android:id="@+id/txtCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CANTIDAD"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UNIDAD MEDIDA:" />
+
+        <EditText
+            android:id="@+id/txtUnidadMedida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="UNIDAD MEDIDA" />
+
+        <Button
+            android:id="@+id/btnInsertar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="INSERTAR" />
+
+        <Button
+            android:id="@+id/btnVerLista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VER LISTA" />
+
+        <Button
+            android:id="@+id/btnEliminarLista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ELIMINAR" />
+
+
+    </LinearLayout>
+
+</FrameLayout>
